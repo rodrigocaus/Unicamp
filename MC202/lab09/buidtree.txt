@@ -1,0 +1,32 @@
+doompalm *buildtree()
+{
+	char atual;
+	scanf("%c", &atual);
+	if (atual == ')')
+		return NULL;
+
+    doompalm *a, *esq, *dir;
+    char str_dados[35];
+	//árvore será lida da esquerda para a direita
+	//em que os filhos da esquerda serão determinados
+	esq = buildtree();
+	scanf("%[^(]", str_dados);
+    scanf("%c",&atual); //pegamos o (
+	dir = buildtree();
+
+	a = calloc(1, sizeof(doompalm));
+	a->esq = esq;
+	a->dir = dir;
+    scanf("%c",&atual);
+
+	if(esq && dir)
+		sscanf(str_dados, "%f:%d:%f", &a->pe, &a->chave, &a->pd);
+	else if(esq)
+		sscanf(str_dados, "%f:%d", &a->pe, &a->chave);
+	else if(dir)
+		sscanf(str_dados, "%d:%f", &a->chave, &a->pd);
+	else
+		sscanf(str_dados, "%d", &a->chave);
+
+	return a;
+}

@@ -1,0 +1,50 @@
+doompalm *build_bin(char *str, int ini, int fim)
+{
+    //Caso tenhamos "()"
+    if(fim-ini <= 1)
+        return NULL;
+
+    doompalm *a;
+    char str_aux[35];
+    //Recebemos a string e pegamos a subarvore esquerda
+    int i, j, abre_ch=0, fecha_ch=0, count;
+    for(i = ini+1; abre_ch>fecha_ch; i++)
+    {
+        if(str[i] == '(')
+            abre_ch++;
+        else if(str[i] == ')')
+            fecha_ch++;
+    }
+    //ini+1 e i serão os limites da subarvore esquerda
+    //Lemos a informação da árvore
+    //procuramos pelo primeiro parentesis da subarvore direita
+    for(j = i; j < fim; j++)
+    {
+        if(str[j] == '(')
+            break;
+    }
+    //j e fim-1 definem os limites da subarvore direita
+
+    //Copiamos os dados para str_aux
+    for(count = 0; count < j-i-1; count++)
+        str_aux[count]=str[i+1+count];
+    str_aux[count+1] = 0;
+
+    a = calloc(1, sizeof(doompalm));
+    if(a == NULL)
+        return NULL;
+    a->esq = build_bin(str, ini+1, i);
+    a->dir = build_bin(str, j, fim-1);
+
+    //Definimos as grandezas
+    if(a->dir && a->esq)
+        sscanf(str_aux, "%f:%d:%f", &(a->pe), &(a->chave), &(a->pd));
+    else if(a->dir)
+        sscanf(str_aux, "%d:%f", &(a->chave), &(a->pd));
+    else if(a->esq)
+        sscanf(str_aux, "%f:%d", &(a->pe), &(a->chave));
+    else
+        sscanf(str_aux, "%d", &(a->chave));
+
+    return a;
+}
